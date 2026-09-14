@@ -95,6 +95,15 @@ ipcMain.handle('select-folder', async () => {
 
 ipcMain.handle('install-project', async (event, { projectName, folderPath, projectType }) => {
   return new Promise((resolve, reject) => {
+    if (typeof projectName !== 'string' || !/^[A-Za-z0-9._-]+$/.test(projectName)) {
+      reject(new Error('Invalid project name'));
+      return;
+    }
+    if (typeof folderPath !== 'string' || folderPath.length === 0) {
+      reject(new Error('Invalid installation directory'));
+      return;
+    }
+
     const projectPath = path.join(folderPath, projectName);
     
     // Check if directory already exists
@@ -141,10 +150,13 @@ ipcMain.handle('install-project', async (event, { projectName, folderPath, proje
         return;
     }
 
-    const child = spawn(command, args, {
+    const isWin = process.platform === 'win32';
+    const executable = isWin ? `${command}.cmd` : command;
+    const child = spawn(executable, args, {
       cwd: folderPath,
       stdio: ['pipe', 'pipe', 'pipe'],
-      shell: true
+      shell: false,
+      windowsHide: true,
     });
 
     let output = '';
