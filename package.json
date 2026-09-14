@@ -20,8 +20,8 @@
   "author": "React Nest Team",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^27.0.0",
-    "electron-builder": "^24.13.3"
+    "electron": "^44.3.0",
+    "electron-builder": "^26.15.3"
   },
   "dependencies": {
     "node-pty": "^1.0.0"
